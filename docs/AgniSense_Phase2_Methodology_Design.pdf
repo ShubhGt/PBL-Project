@@ -1,0 +1,280 @@
+P B L · P R O G R A M M I N G - I ( P Y T H O N ) · P H A S E 2
+AgniSense
+A low-cost fire and smoke early warning system
+Problem statement: Fire and Smoke Early Warning System
+G R O UP NO .
+G R O UP M E M B E R S
+1
+2
+3
+4
+5
+6
+1
+Aarvick Khunteta
+Varun Soni
+Bhavishya Agrawal
+Saumya Gupta
+Sanya Shrivastava 
+Shubham Gupta
+Class – C B.Tech – CSE (AI) 
+
+The problem the program must solve
+Decide, from three sensor readings, whether there is a real fire, and warn people at once while 
+avoiding false alarms.
+INPUTS
+• Smoke: MQ-2, 0 to 1023
+• Flame: IR sensor, 0 to 1023
+• Temperature: DHT11, in °C
+PROCESS
+• Clean the readings
+• Compare each with its limit
+• Count the sensors that agree
+• Hold the level steady
+OUTPUTS
+• Alert level: 4 levels
+• LEDs and buzzer
+• Smoke-extracting fan
+• LCD text and phone message
+2
+
+System design: who does what
+Input
+Smoke, flame and heat 
+in the room
+Sensor / interface
+MQ-2, IR flame sensor, 
+DHT11
+Microcontroller
+Arduino Uno/Nano 
+running the firmware 
+(C++)
+Processing
+Python program on the 
+laptop
+Output / actuator
+LEDs, buzzer, fan via 
+relay, LCD, Bluetooth
+USB serial: one reading per second in, one command out
+Arduino (C++)
+• Reads the three sensors every second
+• Switches LEDs, buzzer, fan relay and LCD
+• Sends the alert level to the phone
+• Fail-safe: simple local rule if Python goes silent
+Python (laptop)
+• Reads and checks each data line
+• Smooths the readings and compares them with limits
+• Counts the sensors that agree and holds the level
+• Chooses the outputs and logs every cycle
+Why split the work: Python is easy to read, test and change without re-uploading code, and the Arduino keeps direct control of the hardware.
+3
+
+Problem decomposition: eight small jobs
+Fire early-warning program
+1 Read data
+parse_line()
+Turn a text line into numbers 
+and reject bad lines
+2 Clean data
+Smoother
+Average the last 5 readings
+3 Compare
+classify()
+Check each sensor against its 
+limit
+4 Decide
+decide_level()
+Count the sensors that are high
+5 Steady the level
+LevelHolder
+Rise at once, fall only after 10 s
+6 Plan outputs
+plan_outputs()
+Choose LEDs, buzzer, fan and 
+LCD text
+7 Talk to the Arduino
+format_command()
+Build and send the command 
+line
+8 Arduino side
+loop()
+Read sensors, drive outputs, 
+fail-safe
+4
+
+Rules: thresholds and the decision table
+W H E N I S A S E N S O R H I G H ?
+Sensor Reading High when
+MQ-2 smoke 0 to 1023 above 400
+IR flame 0 to 1023 (bigger = more 
+flame) above 300
+DHT11 temperature degrees C above 45
+These are starting values. We calibrate them on our own sensors: 
+record normal readings, then set each limit clearly above the 
+normal maximum.
+T H E D E C I S I O N R UL E
+Sensors high Level Response
+0 SAFE Green LED on
+1 WARNING Yellow LED on
+2 POSSIBLE FIRE Yellow blinks, slow beeps
+3 FIRE DETECTED Red LED, buzzer, fan on
+level = number of sensors that are high
+Why: one sensor alone can be fooled by cooking smoke, strong sunlight or a hot room. Two or three agreeing is far more likely to be a real fire.
+5
+
+Flowchart 1: the Python main loop
+START open the serial port → load the settings → wait for the MQ-2 warm-up (120 s) → repeat the loop below
+1 Read a line from the 
+Arduino 2 Line valid? 3 Smooth the readings (average of 5)
+4 Compare each sensor 
+with its limit
+No: skip the line. 5 bad lines in a row: 
+SENSOR FAULT
+5 Count the sensors that 
+are high: level 0 to 3
+6 Hold rule: level falls only 
+after 10 s
+7 Plan the outputs: LEDs, 
+buzzer, fan, LCD
+8 Send the command, print 
+and log
+repeat every second
+While the MQ-2 is warming up, the loop only reads, shows WARMING UP and skips steps 3 to 8.
+6
+
+Flowchart 2: the Arduino firmware
+E V E R Y L O O P ( t h o u s a n d s o f t i m e s a s e c o nd )
+Read the command from USB (the C 
+line)
+Apply the outputs: LEDs, buzzer, fan 
+relay, LCD
+Tell the phone if the level changed 
+(HC-05) repeat
+E V E R Y 1 S E C O N D
+Read the 3 sensors (average 
+of 5 samples each) Send the D line to Python Python silent for 5 
+s?
+Local rule: alarm if smoke or 
+flame is high
+Yes
+No: keep following Python's command
+The fail-safe means the alarm still works if the laptop is switched off or unplugged.
+7
+
+P S E U D O C O D E · 1 O F 3
+Main program
+START
+open serial port; load settings
+start = now; last_good = now; bad_count = 0
+REPEAT
+line = read line from Arduino
+IF line is empty OR parse_line(line) fails THEN
+IF line is not empty THEN bad_count = bad_count + 1
+IF bad_count >= 5 THEN send FAULT("Bad data")
+ELSE IF now - last_good > 5 s THEN send FAULT("No data")
+CONTINUE
+bad_count = 0; last_good = now
+IF now - start < 120 s THEN
+send WARMING UP(seconds left); CONTINUE
+values = smooth(smoke, flame: last 5); temp unchanged
+flags = classify(values)
+level = hold_rule(decide_level(flags), now)
+command = plan_outputs(level, values, flags)
+send format_command(command)
+print status; write row to CSV
+END REPEAT
+on stop: close log file and serial port
+
+P S E U D O C O D E · 2 O F 3
+Key functions: read, compare, decide, hold
+parse_line(line)
+reject unless:
+5 fields, first field = "D"
+all numbers valid
+smoke and flame in 0..1023
+"nan" temp or humidity -> missing
+RETURN reading
+classify(r)
+smoke_high = r.smoke > 400
+flame_high = r.flame > 300
+temp_high = r.temp exists
+AND r.temp > 45
+RETURN the 3 flags
+decide_level(flags)
+RETURN number of true flags
+(0 to 3)
+hold_rule(new_level, now)
+IF new_level >= level THEN
+level = new_level; last_high = now
+ELSE IF now - last_high >= 10 s THEN
+level = new_level
+RETURN level
+A missing DHT11 reading counts as "not high".
+
+P S E U D O C O D E · 3 O F 3
+plan_outputs(level, values, flags)
+Level LED Buzzer Fan LCD text
+0 SAFE Green on Off Off "SAFE" + live S, F, T values
+1 WARNING Yellow on Off Off "WARNING" / "Check the area"
+2 POSSIBLE FIRE Yellow blinks Slow beeps Off "POSSIBLE FIRE" + names of high sensors
+3 FIRE DETECTED Red on Continuous On "FIRE DETECTED" / "Fan ON - leave!"
+WARMING UP Green blinks Off Off "WARMING UP" / seconds left
+SENSOR FAULT Yellow blinks Slow beeps Off "SENSOR FAULT" / "Bad data" or "No data"
+format_command(command)
+remove "," and "|" from each LCD line; cut to 16 characters
+RETURN "C,level,red,yellow,green,buzzer,fan,line1|line2"
+
+Pseudocode
+M A I N P R O G R A M
+START
+open serial port; load settings
+warm-up timer = 120 s
+REPEAT every second
+line = read line from Arduino
+IF line is not valid THEN
+count bad line
+IF 5 bad lines in a row THEN show SENSOR FAULT
+CONTINUE
+IF warm-up not finished THEN
+show WARMING UP; CONTINUE
+values = average of last 5 readings
+smoke_high = values.smoke > 400
+flame_high = values.flame > 300
+temp_high = values.temp > 45
+level = count of high flags (0 to 3)
+level = hold_rule(level)
+command = outputs_for(level)
+send command to Arduino; log to CSV
+END REPEAT
+K E Y F U N C T I O N S
+FUNCTION decide_level(smoke, flame, temp)
+RETURN smoke + flame + temp (true = 1)
+FUNCTION hold_rule(new_level, now)
+IF new_level >= level THEN
+level = new_level
+remember now
+ELSE IF now - last_high >= 10 s THEN
+level = new_level
+RETURN level
+FUNCTION outputs_for(level)
+0 SAFE : green ON
+1 WARNING : yellow ON
+2 POSSIBLE : yellow BLINK, slow beeps
+3 FIRE : red ON, buzzer ON, fan ON
+11
+
+Testing plan and what comes next
+Test case Sensors high Expected level
+Normal air none SAFE
+Cooking-like smoke only smoke WARNING
+Strong light on flame sensor flame WARNING
+Hot room temperature WARNING
+Smoke and flame smoke, flame POSSIBLE FIRE
+Smoke, flame and heat all three FIRE DETECTED
+H O W W E M E AS U R E
+Detection accuracy = correct detections ÷ total tests ×
+100
+False-alarm rate = false alarms ÷ total tests × 100
+Compare single-sensor logic with combined logic 
+using the CSV log.
+12

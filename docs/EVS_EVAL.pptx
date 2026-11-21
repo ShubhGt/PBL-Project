@@ -1,0 +1,291 @@
+## Slide 1
+
+PBL  ·  ENVIRONMENTAL & SUSTAINBILITY
+
+AgniSense
+
+A low-cost fire and smoke early warning system
+
+Problem statement: Fire and Smoke Early Warning System
+
+GROUP NO.
+
+GROUP MEMBERS
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+1
+
+Aarvick Khunteta
+
+Varun Soni
+
+Bhavishya Agrawal
+
+Saumya Gupta
+
+Sanya Shrivastava 
+
+Shubham Gupta
+
+Class – C       B.Tech – CSE (AI) 
+
+## Slide 2
+
+Survey: few have detectors, and cost is the barrier
+
+85%
+
+are hostel or PG students
+
+54%
+
+have seen a fire or smoke incident
+
+46%
+
+want a phone alert
+
+Is there a detector where you stay?
+
+Concerns about detectors
+
+What would you pay?
+
+54% have no detector where they stay.
+
+85% say detectors cost too much for common people.
+
+46% would pay ₹500 to 1,000, and 38% would pay more than ₹1,000.
+
+Source: our Google Forms survey. Concerns were multi-select, so the percentages add up to more than 100%.
+
+2
+
+## Slide 3
+
+In their own words
+
+WHAT PEOPLE AROUND THEM SAY
+
+69%
+
+said fire alarms are important, but people ignore them.
+
+23% said everyone should have one. 8% said they are too costly.
+
+RELIABILITY
+
+“It might not work when we actually need it.”
+
+SLEEPING RISK
+
+“Not knowing there is a fire when I'm sleeping.”
+
+HIGH FLOORS
+
+“I'm on a high floor and it's difficult to get down because the lifts can't be used.”
+
+MAINTENANCE
+
+“Not maintained, costly, and needs regular checks.”
+
+LOUDNESS
+
+“Some of them don't have loud alarms.”
+
+AFFORDABILITY
+
+“We don't have one here. Please make it affordable.”
+
+Quotes are lightly edited for spelling and translated from Hinglish. Answers such as “idk” and blanks are left out.
+
+3
+
+## Slide 4
+
+Who is affected, and what they need
+
+Stakeholder
+Role
+Needs
+Concerns
+Residents and hostel students
+Primary
+Warning even while asleep; a clear alarm; a known exit route.
+Cost, false alarms, a device that fails when needed.
+Families and home owners
+Primary
+Safety of family and property; easy, low-cost setup.
+Affordability, battery changes, upkeep.
+Wardens, PG and building managers
+Primary
+Monitor many rooms; simple testing and maintenance.
+Maintenance load, nuisance-alarm complaints, liability.
+Fire services and responders
+Secondary
+A fast, accurate alert that shows where the fire is.
+Late calls, false calls, unknown location.
+Authorities and regulators (fire dept, BIS and NBC)
+Secondary
+Compliance with fire-safety codes; fewer fire deaths.
+Unreliable or non-standard devices.
+Makers, installers and suppliers
+Secondary
+A simple, low-cost product that is easy to install.
+Part cost, reliability, after-sales support.
+
+4
+
+## Slide 5
+
+Why sustainability matters here
+
+Sustainability
+The ability to maintain or support a process ,system ,or resources continuously over a long period of time without depleting or destroying it .
+
+1
+
+Early warning
+Detects smoke, flame and heat before a fire spreads
+
+2
+
+Low cost
+Built under the ₹1,500 limit (about ₹1,480)
+
+3
+
+Reusable parts
+Most components can be reused or recycled
+
+## Slide 6
+
+SDGs followed by our fire alarm
+
+SDG 3
+
+Good Health and Well-being
+Reduces injuries and deaths from fire and smoke inhalation
+
+SDG 9
+
+Industry, Innovation and Infrastructure
+Promotes sensor and IoT-style technology
+
+SDG 11
+
+Sustainable Cities and Communities
+Makes homes, colleges, offices and public buildings safer
+
+SDG 13
+
+Climate Action
+Limits fire spread, cutting greenhouse gas release
+
+## Slide 7
+
+Components used in Fire Alarm System
+
+COMPONENTS
+RECYCLABLE  OR NON-RECYCLABLE
+Arduino Uno
+YES (Reuse the Board in another electronics project)
+MQ-2 Gas and smoke sensor 
+YES(The  stainless  steel mesh cover and outer housing can be melted down and recycled as scrap metal.
+IR Flame sensor module 
+No
+DHT11 Temperature Sensor
+YES
+ACTIVE BUZZER
+YES (We can use it in alarm and notification system)
+5V Single relay module 
+YES(Some parts like electromagnetic copper coil,silver contact points) 
+5V  DC Fan
+YES(Can be used in small Ventilation projects)
+16x2 12C LED Display
+YES 
+HC 05 Bluetooth module 
+YES(If it is functional we can use it in robotics projects)
+220kΩ resistors
+YES (if it is working  we can reuse it)
+Bread Board and Jumper wires
+Usually 
+
+## Slide 8
+
+Impact of a sustainable system
+
+Environment
+
+Low-power components keep electricity use small
+Faster response can limit fire spread and release of smoke and harmful gases
+Smoke-extracting fan clears smoke from the room
+
+Human health
+
+Early detection lowers risk of fire injuries and deaths
+Smoke particles and gases harm the lungs; early evacuation reduces inhalation
+Four alert levels cut false alarms, so people trust the alarm
+
+## Slide 9
+
+Our approach: reduce, reuse, recycle, dispose
+
+1
+
+Reduce
+
+Only 3 sensors and a few actuators; low-power parts
+
+2
+
+Reuse
+
+Parts are removable, so they go into the next project
+
+3
+
+Recycle
+
+Metal parts and relay contacts go to scrap recovery
+
+4
+
+Dispose
+
+Non-recyclable parts go to e-waste collection, not the bin
+
+## Slide 10
+
+References
+
+WHO: Electronic waste (e-waste) fact sheet, 2024 - who.int
+WHO: Digital dumpsites and children's health, Q&A, 2024 - who.int
+NIEHS: WHO report explores effects of e-waste on children's health, 2021 - niehs.nih.gov
+CPCB: E-Waste EPR portal (E-Waste Management Rules, 2022) - eprewaste.cpcb.gov.in
+
+Component lifespans other than the MQ-2 and relay are typical estimates; check each datasheet.
+
+## Slide 11
+
+## Slide 12
+
+Conclusion
+
+AgniSense protects people and property at low cost.
+It supports SDGs 3, 9, 11 and 13.
+Almost every component can be reused or recycled.
+Safe for people, light on the planet.
+
+Thank you
